@@ -1,115 +1,136 @@
-# 🚀 FinAssist
+# 💰 FinAssist AI: Premium Financial Intelligence Platform
 
-**FinAssist** is a full-stack, AI-powered personal financial assistant designed with multi-agent intelligence, semantic expense understanding, and a premium interactive dashboard. Built for the ET Hackathon.
-
-## ✨ Features
-- **Multi-Agent Core**: Dedicated LLM agents for Expense Classification, Tax deduction mapping, and Financial Trend Analysis.
-- **RAG-Powered Tax Intelligence**: Utilizes FAISS local vector databases to read tax rule logic and deduce category rules on the fly.
-- **Micro-Animated Premium UI**: A highly polished, glassmorphism dashboard built with Vite, React, Recharts, and Vanilla CSS.
-- **Conversational AI**: Interact dynamically with your transaction history through a built-in AI chat module.
-
-## 🛠️ Tech Stack
-- **Backend:** Python, FastAPI, SQLAlchemy (SQLite/PostgreSQL adaptable), OpenAI APIs, FAISS 
-- **Frontend:** React, Vite, Lucide Icons, Recharts
-- **Data Ecosystem:** Pandas, Numpy, Statsmodels 
-
-## ⚙️ How to Setup & Run
-
-### Method 1: The Easy Way (Windows)
-We've included a convenient PowerShell script that instantly launches both the Backend API and the Frontend React Server concurrently.
-1. Open your terminal in the root directory.
-2. Execute the script:
-   ```powershell
-   .\run.ps1
-   ```
-3. Open `http://localhost:5173` to view your Dashboard!
-
-### Method 2: Manual Setup
-**1. Backend:**
-```bash
-cd FinAssist/backend
-python -m venv venv
-.\venv\Scripts\activate
-pip install -r requirements.txt
-copy .env.example .env
-uvicorn app.main:app --reload --port 8000
-```
-> **Important:** Set an `OPENAI_API_KEY` in `FinAssist/backend/.env` to experience the full AI conversational and classification engine. If no key is present, the app safely overrides to mock data for a seamless demonstration.
-
-LLM provider switch in backend `.env`:
-- `LLM_PROVIDER=openai` (default)
-- `LLM_PROVIDER=gemini`
-- Then set matching provider key (`OPENAI_API_KEY` or `GEMINI_API_KEY`).
-
-Backend `.env` now includes sections for:
-- Core app settings (`DATABASE_URL`, `WEBHOOK_SECRET`, `REPORT_LOOKBACK_DAYS`)
-- OpenAI (`OPENAI_API_KEY`)
-- SMS providers (Twilio / MSG91 / Fast2SMS)
-- Payment gateways (Razorpay / Stripe)
-- Account Aggregator/FIU placeholders
-- Dev bootstrap control (`AUTO_CREATE_TABLES=true|false`)
-- Logging control (`LOG_LEVEL`)
-- Rate-limit backend (`RATE_LIMIT_BACKEND=memory|redis`, optional `REDIS_URL`)
-- CORS + host hardening (`CORS_ALLOWED_ORIGINS`, `CORS_ALLOW_CREDENTIALS`, `TRUSTED_HOSTS`)
-- Security headers + HTTPS HSTS toggle (`SECURITY_HEADERS_ENABLED`, `REQUIRE_HTTPS`)
-- Auto-classification feature flag (`AUTO_CLASSIFICATION_ENABLED`)
-- LangGraph checkpoint path (`LANGGRAPH_CHECKPOINT_PATH`)
-
-Operational health endpoints:
-- Liveness: `GET /health`
-- Readiness: `GET /health/ready` (database + RAG index checks)
-
-**2. Frontend:**
-```bash
-cd FinAssist/frontend
-npm install
-copy .env.example .env
-npm run dev
-```
-
-Frontend `.env` uses:
-- `VITE_API_BASE_URL` (default: `http://localhost:8000/api`)
-
-### Backend Tests
-```bash
-cd FinAssist/backend
-python -m pytest -q
-```
-
-### Database Migrations (Alembic)
-```bash
-cd FinAssist/backend
-alembic upgrade head
-```
-
-Notes:
-- Use `AUTO_CREATE_TABLES=true` for local quick-start.
-- Use `AUTO_CREATE_TABLES=false` in production and rely on Alembic migrations.
-
-### CI Pipeline
-- GitHub Actions workflow: `FinAssist/.github/workflows/ci.yml`
-- Runs backend migrations + tests (`alembic upgrade head`, `python -m pytest -q`) and frontend lint/build (`npm run lint -- --max-warnings=0`, `npm run build`) on push/PR.
-
-### Production Preflight and Cutover
-Use this before production deployment to catch unsafe config values.
-
-```bash
-cd FinAssist/backend
-python scripts/production_preflight.py --strict
-```
-
-Production environment template:
-- `FinAssist/backend/.env.production.example`
-
-Recommended cutover order:
-1. Fill production env vars from `FinAssist/backend/.env.production.example`.
-2. Run preflight check in strict mode.
-3. Run migrations: `alembic upgrade head`.
-4. Start backend and verify:
-   - `GET /health`
-   - `GET /health/ready`
-5. Validate feature metrics endpoint after smoke traffic:
-   - `GET /api/realtime/metrics/feedback`
+FinAssist is a state-of-the-art, AI-powered personal financial assistant designed to provide deep insights into your spending habits, investment portfolio, and long-term financial health. Built with a modern tech stack and focusing on a premium user experience, FinAssist transcends traditional budgeting apps by leveraging LLMs for intelligent analysis and planning.
 
 ---
-*Developed for the ET Hackathon.* 🌟
+
+## ✨ Key Features
+
+### 🧠 AI Financial Advisor (RAG-powered)
+- **Intelligent Chat**: Natural language interactions to ask about your finances.
+- **Local-First AI**: Support for **Ollama** allows you to run models like Mistral or Llama 3 locally for maximum data privacy.
+- **Context-Aware Insights**: The advisor uses your real transaction data and portfolio state to provide tailored advice.
+- **Retrieval-Augmented Generation (RAG)**: Built-in knowledge base for financial laws, tax codes, and investment principles.
+
+### 📊 Advanced Financial Analytics
+- **Dynamic Dashboards**: High-fidelity visualizations of income, expenses, and savings trends using **Recharts**.
+- **Automated Categorization**: ML-driven transaction classification with manual feedback loops for continuous improvement.
+- **Real-time Monitoring**: Stay updated with live financial metrics and alerts.
+
+### 📈 Investment Portfolio Analysis
+- **CAMS/KFintech Support**: Parse and analyze your Mutual Fund and Stock statements (CAS) automatically.
+- **Performance Tracking**: Visual performance metrics for your investments.
+
+### 💑 Couple's Money Planner
+- **Collaborative Planning**: Shared financial goals and budget tracking for couples.
+- **Proportional Contribution Analysis**: Plan shared expenses based on individual income levels.
+
+### ⚖️ Tax Intelligence
+- **Tax Planning**: Smart suggestions for tax-saving investments.
+- **Reporting**: Automated summaries for tax filing preparation.
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **State Management**: React Hooks & Context API
+- **Animations**: [Framer Motion](https://www.framer.com/motion/) for premium, fluid UI transitions.
+- **Visuals**: [Recharts](https://recharts.org/) for interactive data visualization.
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Styling**: Modern, high-contrast CSS with a focus on dark-mode aesthetics.
+
+### Backend
+- **Framework**: [FastAPI](https://fastapi.tiangolo.com/) (Python 3.10+)
+- **OR/M**: [SQLAlchemy](https://www.sqlalchemy.org/) with [Alembic](https://alembic.sqlalchemy.org/) for migrations.
+- **AI/LLM**: Support for **Ollama (Local)**, **OpenAI GPT**, and **Google Gemini**.
+- **Orchestration**: [LangGraph](https://www.langchain.com/langgraph) for complex AI agent workflows.
+- **Vector DB**: [FAISS](https://github.com/facebookresearch/faiss) for RAG indexing.
+- **Processing**: Pandas, NumPy, Scikit-learn, Statsmodels for quantitative analysis.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.10 or higher
+- Node.js 18 or higher (LTS recommended)
+- API keys for OpenAI or Google Gemini (stored in `.env`)
+
+### Local Setup
+
+#### 1. Clone the repository
+```bash
+git clone https://github.com/sahilawatramani/FinAssist.git
+cd FinAssist
+```
+
+#### 2. Backend Configuration
+```bash
+cd backend
+python -m venv venv
+# Windows:
+.\venv\Scripts\activate
+# Linux/Mac:
+source venv/bin/activate
+
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env and set your LLM_PROVIDER (e.g., 'ollama', 'openai', or 'gemini')
+# For Ollama, ensure it's running locally (http://localhost:11434)
+```
+
+#### 3. Frontend Configuration
+```bash
+cd ../frontend
+npm install
+cp .env.example .env
+```
+
+#### 4. Running the Application
+**Fast Start (Windows Only):**
+From the root directory, run:
+```powershell
+.\run.ps1
+```
+
+**Manual Start:**
+- **Backend:** `cd backend && uvicorn app.main:app --reload` (Runs on http://localhost:8000)
+- **Frontend:** `cd frontend && npm run dev` (Runs on http://localhost:5173)
+
+---
+
+## 📂 Project Structure
+
+```text
+FinAssist/
+├── backend/            # FastAPI Project
+│   ├── app/            # Main application logic
+│   │   ├── agents/     # LangGraph Agent definitions
+│   │   ├── routers/    # API Endpoints
+│   │   ├── services/   # Business logic & AI services
+│   │   └── models/     # DB Schemas (SQLAlchemy)
+│   ├── alembic/        # Database migrations
+│   └── tests/          # Pytest suite
+├── frontend/           # Vite + React Project
+│   ├── src/
+│   │   ├── components/ # Reusable UI components
+│   │   ├── pages/      # Dashboard and Feature pages
+│   │   └── services/   # API communication (Axios)
+│   └── public/         # Static assets
+└── scripts/            # Utility scripts for data generation
+```
+
+---
+
+## 🛡️ Security & Privacy
+FinAssist is built with privacy-first principles. Local database support is the default, and AI interactions are obfuscated where possible. Security headers and CSRF protections are baked into the core FastAPI middleware.
+
+---
+
+## 🤝 Contributing
+Contributions are welcome! Please open an issue or submit a PR for any features, bug fixes, or UI enhancements.
+
+## 📝 License
+This project is licensed under the MIT License - see the LICENSE file for details.
